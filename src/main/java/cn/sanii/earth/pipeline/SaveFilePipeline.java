@@ -31,12 +31,13 @@ public class SaveFilePipeline implements Pipeline {
 
     @Override
     public void process(Response response) {
-        prifix = new StringBuilder(FILE_PATH).append(response.getName()).append("").toString();
-        final File newFile = new File(prifix + (".txt"));
+        prifix = new StringBuilder(FILE_PATH).append(response.getName()).append("/").toString();
+        mkDir(prifix);
         response.getResultField().getFields().forEach((key, val) -> {
             try {
                 switch (key) {
                     case TEXT:
+                        File newFile = new File(prifix + (response.getName() + ".txt"));
                         String line = System.getProperty("line.separator");
                         Files.append((JSONObject.toJSONString(val) + line), newFile, Charset.defaultCharset());
                         break;
@@ -49,18 +50,14 @@ public class SaveFilePipeline implements Pipeline {
                             urls.forEach((k, v) -> {
                                 service.submit(() -> {
                                     try {
-                                        URL url = new URL(k);
+                                        URL url = new URL(v);
                                         // 打开URL连接
                                         URLConnection con = url.openConnection();
                                         // 得到URL的输入流
                                         InputStream input = con.getInputStream();
                                         byte[] data = readInputStream(input);
                                         StringBuilder path = new StringBuilder(prifix).append("/");
-                                        File file = new File(path.toString());
-                                        if (!file.exists()) {
-                                            file.mkdirs();
-                                        }
-                                        Files.write(data, new File(path.append(v).append(".").append(k.substring(k.lastIndexOf(".") + 1)).toString()));
+                                        Files.write(data, new File(path.append(k).append(".").append(v.substring(v.lastIndexOf(".") + 1)).toString()));
                                     } catch (IOException e) {
                                         log.error("download error", e);
                                     }
@@ -97,5 +94,12 @@ public class SaveFilePipeline implements Pipeline {
             e.printStackTrace();
         }
         return outStream.toByteArray();
+    }
+
+    private void mkDir(String prifix) {
+        File file = new File(prifix);
+        if (!file.exists()) {
+            file.mkdirs();
+        }
     }
 }
