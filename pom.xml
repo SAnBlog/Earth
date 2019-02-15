@@ -8,7 +8,12 @@
     <artifactId>earth</artifactId>
     <version>1.0-SNAPSHOT</version>
 
-    <description>Wandering Earth 流浪地球 </description>
+    <description>Wandering Earth 流浪地球</description>
+
+    <properties>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
+    </properties>
 
     <dependencies>
         <!-- 网络请求客户端 -->
@@ -122,7 +127,6 @@
             <artifactId>junit-jupiter-api</artifactId>
             <version>RELEASE</version>
         </dependency>
-
-
     </dependencies>
+
 </project>
