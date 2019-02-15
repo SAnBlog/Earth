@@ -2,7 +2,7 @@ package cn.sanii.earth;
 
 import com.alibaba.fastjson.JSONObject;
 import cn.sanii.earth.pipeline.SaveFilePipeline;
-import cn.sanii.earth.process.PengfueProcessor;
+import cn.sanii.earth.example.PengfueProcessor;
 import cn.sanii.earth.process.Processor;
 
 import java.util.Objects;

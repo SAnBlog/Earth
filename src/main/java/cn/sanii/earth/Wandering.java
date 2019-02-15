@@ -108,7 +108,7 @@ public class Wandering {
         if (this.isRun != false) {
             this.isRun = false;
         }
-        log.info("stop success");
+        log.info("stop...");
     }
 
     private void trySleep() {

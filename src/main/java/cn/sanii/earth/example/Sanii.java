@@ -3,8 +3,6 @@ package cn.sanii.earth.example;
 import cn.sanii.earth.Earth;
 import cn.sanii.earth.Wandering;
 import cn.sanii.earth.pipeline.SaveFilePipeline;
-import cn.sanii.earth.process.SaniiBeforeProcessor;
-import cn.sanii.earth.process.SaniiProcessor;
 import com.alibaba.fastjson.JSONObject;
 
 import java.util.Objects;
