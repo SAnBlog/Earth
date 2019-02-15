@@ -4,34 +4,116 @@
 流浪地球，分布式抓取框架雏形。
 
 #### 软件架构
-软件架构说明
 
+架构参考大名鼎鼎框架 webmagic
+https://gitee.com/flashsword20/webmagic
 
 #### 安装教程
 
-1. xxxx
-2. xxxx
-3. xxxx
+1. JDK1.8
+2. maven
 
 #### 使用说明
 
-1. xxxx
-2. xxxx
-3. xxxx
+快速入门
 
-#### 参与贡献
+抓取捧腹网时所有页面笑话并持久化到本地
 
-1. Fork 本仓库
-2. 新建 Feat_xxx 分支
-3. 提交代码
-4. 新建 Pull Request
+```
+        Earth.me(new PengfueProcessor())//抓取页面提取规则
+                .addUrl("https://www.pengfue.com/")//开始的种子
+                .start();
+```
+完整功能
+
+```
+        Earth.me(new PengfueProcessor())//抓取页面提取规则
+                .addUrl("https://www.pengfue.com/")//开始的种子
+                .setPipelines(new SaveFilePipeline())//持久化到本地接口，可不用实现，默认打印控制台
+                .addEvent(request -> Objects.nonNull(request), request -> System.out.println("请求体：" + JSONObject.toJSONString(request)))//增加事件 对于请求做一些特殊处理，可不实现
+                .start();
+```
 
 
-#### 码云特技
+PengfueProcessor实现
 
-1. 使用 Readme\_XXX.md 来支持不同的语言，例如 Readme\_en.md, Readme\_zh.md
-2. 码云官方博客 [blog.gitee.com](https://blog.gitee.com)
-3. 你可以 [https://gitee.com/explore](https://gitee.com/explore) 这个地址来了解码云上的优秀开源项目
-4. [GVP](https://gitee.com/gvp) 全称是码云最有价值开源项目，是码云综合评定出的优秀开源项目
-5. 码云官方提供的使用手册 [https://gitee.com/help](https://gitee.com/help)
-6. 码云封面人物是一档用来展示码云会员风采的栏目 [https://gitee.com/gitee-stars/](https://gitee.com/gitee-stars/)
+```
+public class PengfueProcessor implements Processor {
+
+    @Override
+    public void process(Response response) {
+        final ResultField resultField = response.getResultField();
+
+        Document document = response.getDocument();
+        Elements nextPages = document.getElementsByClass("page").first().getElementsByClass("on");
+        nextPages.forEach(element -> {
+            if (element.text().contains("下一页")) {
+                String attr = element.attr("href");
+                log.info("next page:{}", attr);
+                resultField.getRequests().add(new Request(attr));
+            }
+        });
+
+        List<String> titles = Lists.newArrayList();
+        List<String> contents = Lists.newArrayList();
+        document.getElementsByClass("list-item").forEach(element -> {
+            String title = element.getElementsByClass("dp-b").first().getElementsByTag("a").html();
+            String val = element.getElementsByClass("content-img").first().html();
+            titles.add(title);
+            contents.add(val);
+        });
+
+        resultField.getFields().put("title", titles);
+        resultField.getFields().put("contents", contents);
+
+    }
+
+    @Override
+    public String name() {
+        return "Pengfue";
+    }
+
+}
+```
+
+或者
+
+
+```
+Earth.me(new Processor() {
+            @Override
+            public void process(Response response) {
+                final ResultField resultField = response.getResultField();
+
+                Document document = response.getDocument();
+                Elements nextPages = document.getElementsByClass("page").first().getElementsByClass("on");
+                nextPages.forEach(element -> {
+                    if (element.text().contains("下一页")) {
+                        String attr = element.attr("href");
+                        resultField.getRequests().add(new Request(attr));
+                    }
+                });
+
+                List<String> titles = Lists.newArrayList();
+                List<String> contents = Lists.newArrayList();
+                document.getElementsByClass("list-item").forEach(element -> {
+                    String title = element.getElementsByClass("dp-b").first().getElementsByTag("a").html();
+                    String val = element.getElementsByClass("content-img").first().html();
+                    titles.add(title);
+                    contents.add(val);
+                });
+
+                resultField.getFields().put("title", titles);
+                resultField.getFields().put("contents", contents);
+            }
+
+            @Override
+            public String name() {
+                return "Pengfue";
+            }
+        })
+                .addUrl("https://www.pengfue.com/")
+                .setPipelines(new SaveFilePipeline())
+                .addEvent(request -> Objects.nonNull(request), request -> System.out.println("请求体：" + JSONObject.toJSONString(request)))
+                .start();
+```
