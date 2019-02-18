@@ -1,7 +1,7 @@
 # Earth
 
 #### 介绍
-[文档](https://sanii.cn/article/282)
+[框架文档](https://sanii.cn/article/282)
 
 #### 软件架构
 
