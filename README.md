@@ -15,110 +15,48 @@ https://gitee.com/flashsword20/webmagic
 
 #### 使用说明
 
-快速入门
-
-抓取捧腹网时所有页面笑话并持久化到本地
-
-```
-        Earth.me(new PengfueProcessor())//抓取页面提取规则
-                .addUrl("https://www.pengfue.com/")//开始的种子
-                .start();
-```
-完整功能
+#### 示例
+抓取妹子图自拍区所有图片并下载到本地
 
 ```
-        Earth.me(new PengfueProcessor())//抓取页面提取规则
-                .addUrl("https://www.pengfue.com/")//开始的种子
-                .setPipelines(new SaveFilePipeline())//持久化到本地接口，可不用实现，默认打印控制台
-                .addEvent(request -> Objects.nonNull(request), request -> System.out.println("请求体：" + JSONObject.toJSONString(request)))//增加事件 对于请求做一些特殊处理，可不实现
-                .start();
-```
+public class MzituProcessor implements Processor {
 
-
-PengfueProcessor实现
-
-```
-public class PengfueProcessor implements Processor {
-
+    
     @Override
     public void process(Response response) {
-        final ResultField resultField = response.getResultField();
-
         Document document = response.getDocument();
-        Elements nextPages = document.getElementsByClass("page").first().getElementsByClass("on");
-        nextPages.forEach(element -> {
-            if (element.text().contains("下一页")) {
-                String attr = element.attr("href");
-                log.info("next page:{}", attr);
-                resultField.getRequests().add(new Request(attr));
+
+        //获取下一个种子地址
+        document.getElementsByClass("pagenavi-cm").first().getElementsByTag("a").forEach(a -> {
+            if (Objects.nonNull(a) && a.text().contains("下一页")) {
+                String nextPage = a.attr("href");
+                response.getResultField().getRequests().add(new Request(nextPage));
             }
         });
 
-        Map<String, String> result = Maps.newHashMap();
+        /**
+         * 图片地址提取规则
+         */
         Map<String, String> images = Maps.newHashMap();
-        document.getElementsByClass("list-item").forEach(element -> {
-            //image
-            String image = element.getElementsByClass("mem-header").first().getElementsByTag("img").attr("src");
-            images.put(UUID.randomUUID().toString(), image);
-            String title = element.getElementsByClass("dp-b").first().getElementsByTag("a").html();
-            String val = element.getElementsByClass("content-img").first().html();
-            result.put(title, val);
+        document.getElementsByClass("lazy").forEach(element -> {
+            String img = element.attr("data-original");
+            images.put(System.currentTimeMillis() + "", img);
         });
 
-        resultField.getFields().put(FieldEnum.TEXT, result);
-        resultField.getFields().put(FieldEnum.BYTE, images);
-
+        response.getResultField().getFields().put(FieldEnum.BYTE, images);
     }
 
     @Override
     public String name() {
-        return "Pengfue";
+        return "Mzitu";
     }
 
-}
-```
-
-或者
-
-
-```
-Earth.me(new Processor() {
-            @Override
-            public void process(Response response) {
-                final ResultField resultField = response.getResultField();
-
-        Document document = response.getDocument();
-        Elements nextPages = document.getElementsByClass("page").first().getElementsByClass("on");
-        nextPages.forEach(element -> {
-            if (element.text().contains("下一页")) {
-                String attr = element.attr("href");
-                log.info("next page:{}", attr);
-                resultField.getRequests().add(new Request(attr));
-            }
-        });
-
-        Map<String, String> result = Maps.newHashMap();
-        Map<String, String> images = Maps.newHashMap();
-        document.getElementsByClass("list-item").forEach(element -> {
-            //image
-            String image = element.getElementsByClass("mem-header").first().getElementsByTag("img").attr("src");
-            images.put(UUID.randomUUID().toString(), image);
-            String title = element.getElementsByClass("dp-b").first().getElementsByTag("a").html();
-            String val = element.getElementsByClass("content-img").first().html();
-            result.put(title, val);
-        });
-
-        resultField.getFields().put(FieldEnum.TEXT, result);
-        resultField.getFields().put(FieldEnum.BYTE, images);
-            }
-
-            @Override
-            public String name() {
-                return "Pengfue";
-            }
-        })
-                .addUrl("https://www.pengfue.com/")
-                .setPipelines(new SaveFilePipeline())
-                .addEvent(request -> Objects.nonNull(request), request -> System.out.println("请求体：" + JSONObject.toJSONString(request)))
+    public static void main(String[] args) {
+        Earth.me(new MzituProcessor())
+                .addUrl("https://www.mzitu.com/zipai/")
+                .setPipelines(new SaveFilePipeline())//保存到本地管道
+                .addEvent(request -> Objects.nonNull(request), request -> System.out.println("请求体：" + JSONObject.toJSONString(request)))//打印请求到控制台 可省略
                 .start();
+    }
+}
 ```
