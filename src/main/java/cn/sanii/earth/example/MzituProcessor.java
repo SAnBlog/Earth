@@ -24,7 +24,7 @@ public class MzituProcessor implements Processor {
     public void process(Response response) {
         Document document = response.getDocument();
 
-        //next page
+        //获取下一个种子地址
         document.getElementsByClass("pagenavi-cm").first().getElementsByTag("a").forEach(a -> {
             if (Objects.nonNull(a) && a.text().contains("下一页")) {
                 String nextPage = a.attr("href");
@@ -32,6 +32,9 @@ public class MzituProcessor implements Processor {
             }
         });
 
+        /**
+         * 图片地址提取规则
+         */
         HashMap<String, String> images = Maps.newHashMap();
         document.getElementsByClass("lazy").forEach(element -> {
             String img = element.attr("data-original");
@@ -51,6 +54,7 @@ public class MzituProcessor implements Processor {
                 .addUrl("https://www.mzitu.com/zipai/")
                 .setPipelines(new SaveFilePipeline())
                 .addEvent(request -> Objects.nonNull(request), request -> System.out.println("请求体：" + JSONObject.toJSONString(request)))
+                .thread(10)
                 .start();
     }
 }

@@ -134,4 +134,9 @@ public class GuavaThreadPoolUtils {
         return doGuavaExecutor(PROCESSORS, PROCESSORS * 2, Integer.MAX_VALUE, "Wandering_Earth", 200L);
     }
 
+
+    public static ListeningExecutorService getGuavaExecutor(int coreSize) {
+        return doGuavaExecutor(coreSize, coreSize * 2, Integer.MAX_VALUE, "Wandering_Earth", 200L);
+    }
+
 }

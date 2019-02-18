@@ -1,13 +1,8 @@
 package cn.sanii.earth;
 
-import com.alibaba.fastjson.JSONObject;
-import com.google.common.base.Stopwatch;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 import cn.sanii.earth.common.EventManager;
 import cn.sanii.earth.download.Downloader;
 import cn.sanii.earth.download.HttpDownloader;
-import lombok.extern.slf4j.Slf4j;
 import cn.sanii.earth.model.Request;
 import cn.sanii.earth.model.Response;
 import cn.sanii.earth.model.enums.EventEnum;
@@ -18,6 +13,11 @@ import cn.sanii.earth.process.Processor;
 import cn.sanii.earth.schedule.QueueScheduler;
 import cn.sanii.earth.schedule.Scheduler;
 import cn.sanii.earth.util.GuavaThreadPoolUtils;
+import com.alibaba.fastjson.JSONObject;
+import com.google.common.base.Stopwatch;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
 import java.util.Map;
@@ -55,6 +55,11 @@ public class Wandering {
 
     private boolean isRun;
 
+    /**
+     * 线程数
+     */
+    private int threadCount = Runtime.getRuntime().availableProcessors();
+
     private long waitTime;
 
     private long allowWaitTime = 30000L;
@@ -79,7 +84,7 @@ public class Wandering {
             Stopwatch started = Stopwatch.createStarted();
             final Request request = scheduler.poll();
 
-            if (predicate.test(request)){
+            if (predicate.test(request)) {
                 EventManager.consumer(EventEnum.GLOBAL_STARTED, request);
             }
 
@@ -159,6 +164,11 @@ public class Wandering {
         return this;
     }
 
+    public Wandering thread(int theadCount) {
+        this.threadCount = theadCount;
+        return this;
+    }
+
     public Wandering setAllowWaitTime(long waitTime) {
         this.allowWaitTime = waitTime;
         return this;
@@ -222,7 +232,7 @@ public class Wandering {
             this.startRequests.forEach(this.scheduler::push);
         }
         if (Objects.isNull(executorService)) {
-            executorService = GuavaThreadPoolUtils.getDefualtGuavaExecutor();
+            executorService = GuavaThreadPoolUtils.getGuavaExecutor(this.threadCount);
         }
         if (Objects.nonNull(beforeProcessor)) {
             this.cookies.putAll(beforeProcessor.init());
