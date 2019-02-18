@@ -14,13 +14,13 @@ import lombok.experimental.Accessors;
 @Data
 @Accessors(chain = true)
 @Builder
-public class WanderingEvent extends BaseComponent {
+public class EventConfig extends BaseComponent {
 
-    private WanderingEvent(Processor processor) {
+    private EventConfig(Processor processor) {
         this.processor = processor;
     }
 
-    public static WanderingEvent create(Processor processor) {
-        return new WanderingEvent(processor);
+    public static EventConfig create(Processor processor) {
+        return new EventConfig(processor);
     }
 }
