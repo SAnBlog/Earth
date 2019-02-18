@@ -1,8 +1,8 @@
 package cn.sanii.earth;
 
-import cn.sanii.earth.common.EventManager;
 import cn.sanii.earth.download.Downloader;
 import cn.sanii.earth.download.HttpDownloader;
+import cn.sanii.earth.event.EventManager;
 import cn.sanii.earth.model.Request;
 import cn.sanii.earth.model.Response;
 import cn.sanii.earth.model.enums.EventEnum;
@@ -15,14 +15,10 @@ import cn.sanii.earth.schedule.Scheduler;
 import cn.sanii.earth.util.GuavaThreadPoolUtils;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Stopwatch;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
-import java.util.concurrent.ExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
@@ -33,36 +29,7 @@ import java.util.function.Predicate;
  * @Description: 流浪
  */
 @Slf4j
-public class Wandering {
-
-    private Downloader downloader;
-
-    private List<Pipeline> pipelines = Lists.newArrayList();
-
-    private Processor processor;
-
-    private BeforeProcessor beforeProcessor;
-
-    private List<Request> startRequests = Lists.newArrayList();
-
-    private Map<String, String> cookies = Maps.newHashMap();
-
-    private Scheduler scheduler;
-
-    private ExecutorService executorService;
-
-    private Predicate<Request> predicate;
-
-    private boolean isRun;
-
-    /**
-     * 线程数
-     */
-    private int threadCount = Runtime.getRuntime().availableProcessors();
-
-    private long waitTime;
-
-    private long allowWaitTime = 30000L;
+public class Wandering extends BaseComponent {
 
     public Wandering(Processor processor) {
         this.processor = processor;
@@ -158,64 +125,6 @@ public class Wandering {
         }
     }
 
-    public Wandering addEvent(Predicate<Request> predicate, Consumer<Request> consumer) {
-        this.predicate = predicate;
-        EventManager.register(EventEnum.GLOBAL_STARTED, consumer);
-        return this;
-    }
-
-    public Wandering thread(int theadCount) {
-        this.threadCount = theadCount;
-        return this;
-    }
-
-    public Wandering setAllowWaitTime(long waitTime) {
-        this.allowWaitTime = waitTime;
-        return this;
-    }
-
-    public Wandering addUrl(String... url) {
-        for (String s : url) {
-            this.startRequests.add(new Request(s));
-        }
-        return this;
-    }
-
-    public Wandering addUrlAll(List<Request> startRequests) {
-        this.startRequests.addAll(startRequests);
-        return this;
-    }
-
-    public Wandering setBeforeProcessor(BeforeProcessor beforeProcessor) {
-        this.beforeProcessor = beforeProcessor;
-        return this;
-    }
-
-    public Wandering setProcessor(Processor processor) {
-        this.processor = processor;
-        return this;
-    }
-
-    public Wandering setDownloader(Downloader downloader) {
-        this.downloader = downloader;
-        return this;
-    }
-
-    public Wandering setScheduler(Scheduler scheduler) {
-        this.scheduler = scheduler;
-        return this;
-    }
-
-    public Wandering setPipelines(List<Pipeline> pipelines) {
-        this.pipelines.addAll(pipelines);
-        return this;
-    }
-
-    public Wandering setPipelines(Pipeline pipeline) {
-        this.pipelines.add(pipeline);
-        return this;
-    }
-
     /**
      * init
      */
@@ -238,5 +147,75 @@ public class Wandering {
             this.cookies.putAll(beforeProcessor.init());
         }
         log.info("init success");
+    }
+
+
+    @Override
+    public Wandering addEvent(Predicate<Request> predicate, Consumer<Request> consumer) {
+        this.predicate = predicate;
+        EventManager.register(EventEnum.GLOBAL_STARTED, consumer);
+        return this;
+    }
+
+    @Override
+    public Wandering thread(int theadCount) {
+        this.threadCount = theadCount;
+        return this;
+    }
+
+    @Override
+    public Wandering setAllowWaitTime(long waitTime) {
+        this.allowWaitTime = waitTime;
+        return this;
+    }
+
+    @Override
+    public Wandering addUrl(String... url) {
+        for (String s : url) {
+            this.startRequests.add(new Request(s));
+        }
+        return this;
+    }
+
+    @Override
+    public Wandering addUrlAll(List<Request> startRequests) {
+        this.startRequests.addAll(startRequests);
+        return this;
+    }
+
+    @Override
+    public Wandering setBeforeProcessor(BeforeProcessor beforeProcessor) {
+        this.beforeProcessor = beforeProcessor;
+        return this;
+    }
+
+    @Override
+    public Wandering setProcessor(Processor processor) {
+        this.processor = processor;
+        return this;
+    }
+
+    @Override
+    public Wandering setDownloader(Downloader downloader) {
+        this.downloader = downloader;
+        return this;
+    }
+
+    @Override
+    public Wandering setScheduler(Scheduler scheduler) {
+        this.scheduler = scheduler;
+        return this;
+    }
+
+    @Override
+    public Wandering setPipelines(List<Pipeline> pipelines) {
+        this.pipelines.addAll(pipelines);
+        return this;
+    }
+
+    @Override
+    public Wandering setPipelines(Pipeline pipeline) {
+        this.pipelines.add(pipeline);
+        return this;
     }
 }

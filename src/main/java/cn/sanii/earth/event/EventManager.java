@@ -1,4 +1,4 @@
-package cn.sanii.earth.common;
+package cn.sanii.earth.event;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -14,7 +14,7 @@ import java.util.function.Consumer;
 /**
  * @Author: shouliang.wang
  * @Date: 2019/2/15 14:34
- * @Description:
+ * @Description: Consumer管理器
  */
 public class EventManager {
 
