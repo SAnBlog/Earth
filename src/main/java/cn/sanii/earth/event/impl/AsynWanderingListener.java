@@ -14,8 +14,11 @@ import lombok.extern.slf4j.Slf4j;
  * @Description: 异步监听任务
  */
 @Slf4j
-public class AsynWanderingListener implements EventListener {
+public class AsynWanderingListener implements EventListener<BaseComponent> {
 
+    /**
+     * 线程池，控制消费线程数
+     */
     private static final ListeningExecutorService executor = GuavaThreadPoolUtils.getDefualtGuavaExecutor();
 
     @Subscribe

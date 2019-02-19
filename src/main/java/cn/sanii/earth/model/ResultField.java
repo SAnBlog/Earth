@@ -14,7 +14,7 @@ import java.util.Map;
 /**
  * @Author: shouliang.wang
  * @Date: 2019/2/13 17:05
- * @Description:
+ * @Description: 页面提取结果
  */
 @Data
 @Builder

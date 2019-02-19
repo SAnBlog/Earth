@@ -1,12 +1,11 @@
 package cn.sanii.earth.pipeline;
 
 import cn.sanii.earth.model.Response;
-import cn.sanii.earth.model.ResultField;
 
 /**
  * @Author: shouliang.wang
  * @Date: 2019/2/13 17:07
- * @Description:
+ * @Description: 处理管道接口
  */
 public interface Pipeline {
 
@@ -15,6 +14,10 @@ public interface Pipeline {
      */
     String FILE_PATH = "D:/";
 
+    /**
+     * 处理页面响应
+     * @param response
+     */
     void process(Response response);
 
 }

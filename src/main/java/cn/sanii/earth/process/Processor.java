@@ -5,11 +5,19 @@ import cn.sanii.earth.model.Response;
 /**
  * @Author: shouliang.wang
  * @Date: 2019/2/13 17:08
- * @Description:
+ * @Description: 页面处理接口
  */
 public interface Processor {
 
+    /**
+     * 对下载的页面进行处理
+     * @param response
+     */
     void process(Response response);
 
+    /**
+     *  任务name
+     * @return
+     */
     String name();
 }

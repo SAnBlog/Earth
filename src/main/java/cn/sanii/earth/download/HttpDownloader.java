@@ -13,7 +13,7 @@ import java.util.Objects;
 /**
  * @Author: shouliang.wang
  * @Date: 2019/2/14 10:54
- * @Description: okhttp
+ * @Description: okhttp下载器
  */
 @Slf4j
 public class HttpDownloader implements Downloader {

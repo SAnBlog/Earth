@@ -18,6 +18,9 @@ import java.util.List;
 @Accessors(chain = true)
 public class EventConfig extends BaseComponent {
 
+    /**
+     * 事件监听器
+     */
     private static List<EventListener> listenerList = Lists.newArrayList();
 
     static {

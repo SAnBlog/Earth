@@ -145,7 +145,7 @@ public class Wandering extends BaseComponent {
      * init
      */
     private synchronized void inintComponent() {
-        log.info("inint Component ...");
+        log.info("init Component ...");
         if (Objects.isNull(downloader)) {
             downloader = new HttpDownloader();
         }

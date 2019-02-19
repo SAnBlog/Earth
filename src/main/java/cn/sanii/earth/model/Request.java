@@ -9,7 +9,7 @@ import java.util.Map;
 /**
  * @Author: shouliang.wang
  * @Date: 2019/2/13 17:00
- * @Description:
+ * @Description: 抓取请求
  */
 @Data
 public class Request {
