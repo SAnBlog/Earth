@@ -18,6 +18,7 @@ https://gitee.com/flashsword20/webmagic
 #### 示例
 抓取妹子图自拍区所有图片并下载到本地
 
+同步方式
 ```
 public class MzituProcessor implements Processor {
 
@@ -59,4 +60,16 @@ public class MzituProcessor implements Processor {
                 .start();
     }
 }
+```
+
+异步
+
+```$xslt
+        BaseComponent component = EventConfig.create(new MzituProcessor())
+                .addUrl("https://www.mzitu.com/zipai/")
+                .setPipelines(new SaveFilePipeline())
+                .addEvent(request -> Objects.nonNull(request), request -> System.out.println("请求体：" + JSONObject.toJSONString(request)))
+                .thread(10);
+
+        Earth.asyn(component);
 ```
