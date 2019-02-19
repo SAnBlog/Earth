@@ -24,24 +24,51 @@ import java.util.function.Predicate;
  */
 public abstract class BaseComponent {
 
+    /**
+     * 下载器组件
+     */
     protected Downloader downloader;
 
+    /**
+     * 管道组件
+     */
     protected List<Pipeline> pipelines = Lists.newArrayList();
 
+    /**
+     * 处理页面组件
+     */
     protected Processor processor;
 
+    /**
+     * 任务正式抓取前操作组件
+     */
     protected BeforeProcessor beforeProcessor;
 
+    /**
+     * 种子列表
+     */
     protected List<Request> startRequests = Lists.newArrayList();
 
+    /**
+     * cookie
+     */
     protected Map<String, String> cookies = Maps.newHashMap();
 
+    /**
+     * 调度器组件
+     */
     protected Scheduler scheduler;
 
+    /**
+     * 线程池
+     */
     protected ExecutorService executorService;
 
     protected Predicate<Request> predicate;
 
+    /**
+     * 运行状态
+     */
     protected boolean isRun;
 
     /**
@@ -49,8 +76,14 @@ public abstract class BaseComponent {
      */
     protected int threadCount = Runtime.getRuntime().availableProcessors();
 
+    /**
+     * 线程空闲等待持续时间
+     */
     protected long waitTime;
 
+    /**
+     * 允许线程空闲最大等待时间，大于则终止任务。
+     */
     protected long allowWaitTime = 30000L;
 
     public BaseComponent addEvent(Predicate<Request> predicate, Consumer<Request> consumer) {
