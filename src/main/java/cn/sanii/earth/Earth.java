@@ -45,19 +45,20 @@ public class Earth {
 
 
     public static void main(String[] args) {
+        //同步 本地内存队列
         Earth.me(new PengfueProcessor())
                 .addUrl("https://www.pengfue.com/")
                 .setPipelines(new SaveFilePipeline())
                 .addEvent(request -> Objects.nonNull(request), request -> System.out.println("请求体：" + JSONObject.toJSONString(request)))
-                .setScheduler(new RedisScheduler("127.0.0.1"))
                 .start();
 
-//        BaseComponent component = EventConfig.create(new MzituProcessor())
-//                .addUrl("https://www.mzitu.com/zipai/")
-//                .setPipelines(new SaveFilePipeline())
-//                .addEvent(request -> Objects.nonNull(request), request -> System.out.println("请求体：" + JSONObject.toJSONString(request)))
-//                .setScheduler(new RedisScheduler("127.0.0.1"));
-//
-//        Earth.asyn(component);
+        //异步 Redis队列
+        BaseComponent component = EventConfig.create(new MzituProcessor())
+                .addUrl("https://www.mzitu.com/zipai/")
+                .setPipelines(new SaveFilePipeline())
+                .addEvent(request -> Objects.nonNull(request), request -> System.out.println("请求体：" + JSONObject.toJSONString(request)))
+                .setScheduler(new RedisScheduler("127.0.0.1"));
+
+        Earth.asyn(component);
     }
 }
