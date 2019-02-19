@@ -3,7 +3,9 @@ package cn.sanii.earth.event.impl;
 import cn.sanii.earth.BaseComponent;
 import cn.sanii.earth.Wandering;
 import cn.sanii.earth.event.EventListener;
+import cn.sanii.earth.util.GuavaThreadPoolUtils;
 import com.google.common.eventbus.Subscribe;
+import com.google.common.util.concurrent.ListeningExecutorService;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -14,9 +16,11 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class AsynWanderingListener implements EventListener {
 
+    private static final ListeningExecutorService executor = GuavaThreadPoolUtils.getDefualtGuavaExecutor();
+
     @Subscribe
     @Override
     public void message(BaseComponent event) {
-        new Wandering(event).start();
+        executor.submit(() -> new Wandering(event).start());
     }
 }
