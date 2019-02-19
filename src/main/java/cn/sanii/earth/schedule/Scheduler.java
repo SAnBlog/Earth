@@ -9,6 +9,8 @@ import cn.sanii.earth.model.Request;
  */
 public interface Scheduler {
 
+    String FIELD_NAME = "default_";
+
     /**
      * 推入一个任务到队列
      * @param request

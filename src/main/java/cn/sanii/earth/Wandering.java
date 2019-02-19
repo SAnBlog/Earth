@@ -61,7 +61,7 @@ public class Wandering extends BaseComponent {
 
         log.warn("北京第三区交通委提醒你:道路千万条,安全第一条,行车不规范,亲人两行泪");
 
-        inintComponent();
+        initComponent();
         this.isRun = true;
 
         while (this.isRun) {
@@ -108,7 +108,7 @@ public class Wandering extends BaseComponent {
     }
 
     private void handler(Request request) {
-        request.setCookies(this.cookies);
+        request.setCookies(this.cookies).setName(this.processor.name());
         Response response = downloader.download(request);
         response.setName(this.processor.name());
         log.info("response:{}", JSONObject.toJSONString(response));
@@ -144,7 +144,7 @@ public class Wandering extends BaseComponent {
     /**
      * init
      */
-    private synchronized void inintComponent() {
+    private synchronized void initComponent() {
         log.info("init Component ...");
         if (Objects.isNull(downloader)) {
             downloader = new HttpDownloader();

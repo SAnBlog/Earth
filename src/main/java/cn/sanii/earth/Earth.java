@@ -6,6 +6,7 @@ import cn.sanii.earth.example.MzituProcessor;
 import cn.sanii.earth.example.PengfueProcessor;
 import cn.sanii.earth.pipeline.SaveFilePipeline;
 import cn.sanii.earth.process.Processor;
+import cn.sanii.earth.schedule.RedisScheduler;
 import com.alibaba.fastjson.JSONObject;
 
 import java.util.Objects;
@@ -54,7 +55,8 @@ public class Earth {
                 .addUrl("https://www.mzitu.com/zipai/")
                 .setPipelines(new SaveFilePipeline())
                 .addEvent(request -> Objects.nonNull(request), request -> System.out.println("请求体：" + JSONObject.toJSONString(request)))
-                .thread(10);
+                .thread(10)
+                .setScheduler(new RedisScheduler("mzitu","127.0.0.1"));
 
         Earth.asyn(component);
     }
