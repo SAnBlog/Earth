@@ -7,9 +7,7 @@ import cn.sanii.earth.model.Request;
  * @Date: 2019/2/13 17:09
  * @Description: 调度接口
  */
-public interface Scheduler {
-
-    String FIELD_NAME = "default_";
+public interface Scheduler{
 
     /**
      * 推入一个任务到队列

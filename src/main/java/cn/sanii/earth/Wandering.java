@@ -22,6 +22,7 @@ import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 /**
  * @Author: shouliang.wang
@@ -135,12 +136,6 @@ public class Wandering extends BaseComponent {
     }
 
 
-    private void consumerEvent(Request request, Predicate<Request> predicate) {
-        if (predicate.test(request)) {
-            EventManager.consumer(EventEnum.GLOBAL_STARTED, request);
-        }
-    }
-
     /**
      * init
      */
@@ -154,8 +149,10 @@ public class Wandering extends BaseComponent {
         }
         if (Objects.isNull(scheduler)) {
             scheduler = new QueueScheduler();
-            this.startRequests.forEach(this.scheduler::push);
         }
+
+        this.startRequests.stream().map(request -> request.setName(this.processor.name())).forEach((this.scheduler::push));
+
         if (Objects.isNull(executorService)) {
             executorService = GuavaThreadPoolUtils.getGuavaExecutor(this.threadCount);
         }

@@ -8,6 +8,7 @@ import cn.sanii.earth.pipeline.Pipeline;
 import cn.sanii.earth.process.BeforeProcessor;
 import cn.sanii.earth.process.Processor;
 import cn.sanii.earth.schedule.Scheduler;
+import cn.sanii.earth.schedule.SchedulerName;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
@@ -104,7 +105,7 @@ public abstract class BaseComponent {
 
     public BaseComponent addUrl(String... url) {
         for (String s : url) {
-            this.startRequests.add(new Request(s));
+            this.startRequests.add(new Request(s, this.processor.name()));
         }
         return this;
     }
@@ -130,6 +131,9 @@ public abstract class BaseComponent {
     }
 
     public BaseComponent setScheduler(Scheduler scheduler) {
+        if (scheduler instanceof SchedulerName) {
+            ((SchedulerName) scheduler).setFieldName(this.processor.name());
+        }
         this.scheduler = scheduler;
         return this;
     }

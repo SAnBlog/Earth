@@ -31,7 +31,7 @@ public class PengfueProcessor implements Processor {
             if (element.text().contains("下一页")) {
                 String attr = element.attr("href");
                 log.info("next page:{}", attr);
-                resultField.getRequests().add(new Request(attr));
+                resultField.getRequests().add(new Request(attr,name()));
             }
         });
 

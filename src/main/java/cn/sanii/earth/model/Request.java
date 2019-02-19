@@ -26,8 +26,15 @@ public class Request {
 
     private Map<String, String> headers = Maps.newHashMap();
 
-    public Request(String url) {
+    /**
+     * 实现了SchedulerName接口请使用该方法
+     * @param url
+     * @param name 任务id
+     * @See cn.sanii.earth.schedule.SchedulerName
+     */
+    public Request(String url, String name) {
         this.url = url;
+        this.name = name;
         this.headers.put("User-Agent", UserAgent.CHROME_FOR_MAC);
     }
 }

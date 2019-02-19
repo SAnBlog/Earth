@@ -10,20 +10,17 @@ import java.util.Optional;
 /**
  * @Author: shouliang.wang
  * @Date: 2019/2/19 17:31
- * @Description: Redis调度中心 支持分布式
+ * @Description: Redis调度队列
  */
-public class RedisScheduler implements Scheduler {
+public class RedisScheduler extends SchedulerName implements Scheduler {
 
     private JedisPool pool;
-    private String FIELD_NAME = "default_";
 
-    public RedisScheduler(String fieldName, String host) {
-        this(fieldName, new JedisPool(new JedisPoolConfig(), host));
-        this.FIELD_NAME = fieldName;
+    public RedisScheduler(String host) {
+        this(new JedisPool(new JedisPoolConfig(), host));
     }
 
-    public RedisScheduler(String fieldName, JedisPool pool) {
-        this.FIELD_NAME = fieldName;
+    public RedisScheduler(JedisPool pool) {
         this.pool = pool;
     }
 
@@ -41,9 +38,9 @@ public class RedisScheduler implements Scheduler {
     public Request poll() {
         Jedis jedis = pool.getResource();
         try {
-            Optional<String> url = Optional.ofNullable(jedis.lpop(this.FIELD_NAME));
+            Optional<String> url = Optional.ofNullable(jedis.lpop(this.fieldName));
             if (url.isPresent()) {
-                return new Request(url.get());
+                return new Request(url.get(),this.fieldName);
             }
         } finally {
             jedis.close();

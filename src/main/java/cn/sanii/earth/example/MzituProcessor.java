@@ -28,7 +28,7 @@ public class MzituProcessor implements Processor {
         document.getElementsByClass("pagenavi-cm").first().getElementsByTag("a").forEach(a -> {
             if (Objects.nonNull(a) && a.text().contains("下一页")) {
                 String nextPage = a.attr("href");
-                response.getResultField().getRequests().add(new Request(nextPage));
+                response.getResultField().getRequests().add(new Request(nextPage, name()));
             }
         });
 
