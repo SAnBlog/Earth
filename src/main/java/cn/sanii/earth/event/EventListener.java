@@ -11,11 +11,7 @@ import lombok.extern.slf4j.Slf4j;
  * @Date: 2019-02-18 22:35
  * @Description: 事件驱动监听者
  */
-@Slf4j
-public class EventListener {
+public interface EventListener {
 
-    @Subscribe
-    public void message(BaseComponent event) {
-        log.info("收到消息:{}", JSONObject.toJSONString(event));
-    }
+    void message(BaseComponent event);
 }

@@ -1,10 +1,13 @@
 package cn.sanii.earth.event;
 
 import cn.sanii.earth.BaseComponent;
+import cn.sanii.earth.event.impl.AsynWanderingListener;
 import cn.sanii.earth.process.Processor;
-import lombok.Builder;
+import com.google.common.collect.Lists;
 import lombok.Data;
 import lombok.experimental.Accessors;
+
+import java.util.List;
 
 /**
  * @Author: shouliang.wang
@@ -13,8 +16,13 @@ import lombok.experimental.Accessors;
  */
 @Data
 @Accessors(chain = true)
-@Builder
 public class EventConfig extends BaseComponent {
+
+    private static List<EventListener> listenerList = Lists.newArrayList();
+
+    static {
+        listenerList.add(new AsynWanderingListener());
+    }
 
     private EventConfig(Processor processor) {
         this.processor = processor;
@@ -23,4 +31,17 @@ public class EventConfig extends BaseComponent {
     public static EventConfig create(Processor processor) {
         return new EventConfig(processor);
     }
+
+    public static void register(EventListener listener) {
+        listenerList.add(listener);
+    }
+
+    public static void registerAll(List<EventListener> listenerList) {
+        listenerList.forEach(EventConfig::register);
+    }
+
+    public static List<EventListener> getEventListener() {
+        return listenerList;
+    }
+
 }

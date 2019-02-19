@@ -35,6 +35,23 @@ public class Wandering extends BaseComponent {
         this.processor = processor;
     }
 
+    public Wandering(BaseComponent component) {
+        this.processor = component.processor;
+        this.downloader = component.downloader;
+        this.pipelines.addAll(component.pipelines);
+        this.processor = component.processor;
+        this.beforeProcessor = component.beforeProcessor;
+        this.startRequests.addAll(component.startRequests);
+        this.cookies.putAll(component.cookies);
+        this.scheduler = component.scheduler;
+        this.executorService = component.executorService;
+        this.predicate = component.predicate;
+        this.isRun = component.isRun;
+        this.threadCount = component.threadCount;
+        this.waitTime = component.waitTime;
+        this.allowWaitTime = component.allowWaitTime;
+    }
+
 
     public void start() {
         if (this.isRun) {
@@ -51,11 +68,10 @@ public class Wandering extends BaseComponent {
             Stopwatch started = Stopwatch.createStarted();
             final Request request = scheduler.poll();
 
-            if (predicate.test(request)) {
-                EventManager.consumer(EventEnum.GLOBAL_STARTED, request);
-            }
-
             if (Objects.nonNull(request)) {
+                if (predicate.test(request)) {
+                    EventManager.consumer(EventEnum.GLOBAL_STARTED, request);
+                }
                 executorService.submit(() -> handler(request));
                 waitTime = 0;
             }
@@ -149,73 +165,69 @@ public class Wandering extends BaseComponent {
         log.info("init success");
     }
 
-
     @Override
     public Wandering addEvent(Predicate<Request> predicate, Consumer<Request> consumer) {
-        this.predicate = predicate;
-        EventManager.register(EventEnum.GLOBAL_STARTED, consumer);
+        super.addEvent(predicate, consumer);
         return this;
     }
 
     @Override
     public Wandering thread(int theadCount) {
-        this.threadCount = theadCount;
+        super.thread(theadCount);
         return this;
     }
 
     @Override
     public Wandering setAllowWaitTime(long waitTime) {
-        this.allowWaitTime = waitTime;
+        super.setAllowWaitTime(waitTime);
         return this;
     }
 
     @Override
     public Wandering addUrl(String... url) {
-        for (String s : url) {
-            this.startRequests.add(new Request(s));
-        }
+        super.addUrl(url);
         return this;
     }
 
     @Override
     public Wandering addUrlAll(List<Request> startRequests) {
-        this.startRequests.addAll(startRequests);
+        super.addUrlAll(startRequests);
         return this;
     }
 
     @Override
     public Wandering setBeforeProcessor(BeforeProcessor beforeProcessor) {
-        this.beforeProcessor = beforeProcessor;
+        super.setBeforeProcessor(beforeProcessor);
         return this;
     }
 
     @Override
     public Wandering setProcessor(Processor processor) {
-        this.processor = processor;
+        super.setProcessor(processor);
         return this;
     }
 
     @Override
     public Wandering setDownloader(Downloader downloader) {
-        this.downloader = downloader;
+        super.setDownloader(downloader);
         return this;
     }
 
     @Override
     public Wandering setScheduler(Scheduler scheduler) {
-        this.scheduler = scheduler;
+        super.setScheduler(scheduler);
         return this;
     }
 
     @Override
     public Wandering setPipelines(List<Pipeline> pipelines) {
-        this.pipelines.addAll(pipelines);
+        super.setPipelines(pipelines);
         return this;
     }
 
     @Override
     public Wandering setPipelines(Pipeline pipeline) {
-        this.pipelines.add(pipeline);
+        super.setPipelines(pipeline);
         return this;
     }
 }

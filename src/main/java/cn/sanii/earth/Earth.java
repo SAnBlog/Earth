@@ -1,7 +1,6 @@
 package cn.sanii.earth;
 
 import cn.sanii.earth.event.EventBusCenter;
-import cn.sanii.earth.event.EventListener;
 import cn.sanii.earth.event.EventConfig;
 import cn.sanii.earth.example.MzituProcessor;
 import cn.sanii.earth.example.PengfueProcessor;
@@ -21,6 +20,7 @@ public class Earth {
     private Earth() {
     }
 
+
     /**
      * 同步执行
      *
@@ -38,7 +38,7 @@ public class Earth {
      * @return
      */
     public static void asyn(BaseComponent component) {
-        EventBusCenter.register(new EventListener());
+        EventConfig.getEventListener().forEach(EventBusCenter::register);
         EventBusCenter.postAsync(component);
     }
 

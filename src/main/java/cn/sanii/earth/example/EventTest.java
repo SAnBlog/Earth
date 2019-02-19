@@ -21,7 +21,6 @@ public class EventTest {
                 .thread(10);
 
 
-        EventBusCenter.register(new EventListener());
         EventBusCenter.postAsync(component);
     }
 }
