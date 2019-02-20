@@ -30,11 +30,12 @@ public class Response {
 
     private String html;
 
-    private Document document;
 
     public void setResult(String html) {
-        Document parse = Jsoup.parse(html);
         this.html = html;
-        this.document = parse;
+    }
+
+    public Document getDocument() {
+        return Jsoup.parse(html);
     }
 }
