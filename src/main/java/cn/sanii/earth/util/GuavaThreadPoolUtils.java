@@ -23,7 +23,9 @@ public class GuavaThreadPoolUtils {
     private GuavaThreadPoolUtils() {
     }
 
-    //当前可用CPU数
+    /**
+     * 当前可用CPU数
+     */
     private static final int PROCESSORS = Runtime.getRuntime().availableProcessors();
 
 

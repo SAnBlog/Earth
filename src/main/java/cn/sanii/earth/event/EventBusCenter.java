@@ -16,12 +16,12 @@ public class EventBusCenter {
     /**
      * 管理同步事件
      */
-    public static EventBus syncEventBus = new EventBus();
+    private static EventBus syncEventBus = new EventBus();
 
     /**
      * 管理异步事件
      */
-    public static AsyncEventBus asyncEventBus = new AsyncEventBus(Executors.newCachedThreadPool());
+    private static AsyncEventBus asyncEventBus = new AsyncEventBus(Executors.newCachedThreadPool());
 
 
     /**
