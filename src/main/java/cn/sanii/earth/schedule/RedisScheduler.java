@@ -15,6 +15,7 @@ import java.util.Optional;
 public class RedisScheduler extends SchedulerName implements Scheduler {
 
     private JedisPool pool;
+    private static final String PREFIX = "queue_";
 
     public RedisScheduler(String host) {
         this(new JedisPool(new JedisPoolConfig(), host));
@@ -28,7 +29,7 @@ public class RedisScheduler extends SchedulerName implements Scheduler {
     public void push(Request request) {
         Jedis jedis = pool.getResource();
         try {
-            jedis.rpush(request.getName(), request.getUrl());
+            jedis.rpush(PREFIX.concat(request.getName()), request.getUrl());
         } finally {
             jedis.close();
         }
@@ -38,9 +39,9 @@ public class RedisScheduler extends SchedulerName implements Scheduler {
     public Request poll() {
         Jedis jedis = pool.getResource();
         try {
-            Optional<String> url = Optional.ofNullable(jedis.lpop(this.fieldName));
+            Optional<String> url = Optional.ofNullable(jedis.lpop(PREFIX.concat(this.fieldName)));
             if (url.isPresent()) {
-                return new Request(url.get(),this.fieldName);
+                return new Request(url.get(), this.fieldName);
             }
         } finally {
             jedis.close();
