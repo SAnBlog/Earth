@@ -5,14 +5,15 @@ import cn.sanii.earth.event.EventManager;
 import cn.sanii.earth.model.Request;
 import cn.sanii.earth.model.enums.EventEnum;
 import cn.sanii.earth.pipeline.IPipeline;
-import cn.sanii.earth.process.IAfterProcessor;
 import cn.sanii.earth.process.BaseBeforeProcessor;
+import cn.sanii.earth.process.IAfterProcessor;
 import cn.sanii.earth.process.IProcessor;
 import cn.sanii.earth.schedule.IScheduler;
 import cn.sanii.earth.schedule.SchedulerName;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
+import java.nio.charset.Charset;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
@@ -110,8 +111,13 @@ public abstract class BaseComponent {
     }
 
     public BaseComponent addUrl(String... url) {
+        addUrl(Charset.defaultCharset(), url);
+        return this;
+    }
+
+    public BaseComponent addUrl(Charset charset, String... url) {
         for (String s : url) {
-            this.startRequests.add(new Request(s, this.processor.name()));
+            this.startRequests.add(new Request(s, this.processor.name(), charset));
         }
         return this;
     }

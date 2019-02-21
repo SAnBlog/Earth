@@ -19,6 +19,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Stopwatch;
 import lombok.extern.slf4j.Slf4j;
 
+import java.nio.charset.Charset;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -183,6 +184,12 @@ public class Wandering extends BaseComponent {
     @Override
     public Wandering setAllowWaitTime(long waitTime) {
         super.setAllowWaitTime(waitTime);
+        return this;
+    }
+
+    @Override
+    public Wandering addUrl(Charset charset, String... url) {
+        super.addUrl(charset, url);
         return this;
     }
 

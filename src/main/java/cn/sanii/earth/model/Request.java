@@ -5,6 +5,7 @@ import com.google.common.collect.Maps;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
+import java.nio.charset.Charset;
 import java.util.Map;
 
 /**
@@ -19,6 +20,12 @@ public class Request {
     private String url;
 
     private String name;
+
+    /**
+     * 页面编码格式
+     */
+    private Charset charset;
+
     /**
      * cookies for current url, if not set use Site's cookies
      */
@@ -34,8 +41,19 @@ public class Request {
      * @See cn.sanii.earth.schedule.SchedulerName
      */
     public Request(String url, String name) {
+        this(url, name, Charset.defaultCharset());
+    }
+
+    /**
+     *
+     * @param url
+     * @param name
+     * @param charset 页面编码格式
+     */
+    public Request(String url, String name, Charset charset) {
         this.url = url;
         this.name = name;
+        this.charset = charset;
         this.headers.put("User-Agent", UserAgent.CHROME_FOR_MAC);
         this.headers.put("Referer", url);
     }

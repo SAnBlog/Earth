@@ -40,7 +40,8 @@ public class HttpDownloader implements IDownloader {
 
             okhttp3.Request res = builder.build();
 
-            String result = ok.newCall(res).execute().body().string();
+            byte[] b = ok.newCall(res).execute().body().bytes();
+            String result = new String(b, request.getCharset());
             response.setResult(result);
             response.setSuccess(true);
         } catch (IOException e) {
