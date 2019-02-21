@@ -1,17 +1,19 @@
 package cn.sanii.earth;
 
-import cn.sanii.earth.download.Downloader;
-import cn.sanii.earth.download.HttpDownloader;
+import cn.sanii.earth.download.IDownloader;
+import cn.sanii.earth.download.impl.HttpDownloader;
 import cn.sanii.earth.event.EventManager;
 import cn.sanii.earth.model.Request;
 import cn.sanii.earth.model.Response;
 import cn.sanii.earth.model.enums.EventEnum;
-import cn.sanii.earth.pipeline.ConsolePipeline;
-import cn.sanii.earth.pipeline.Pipeline;
-import cn.sanii.earth.process.BeforeProcessor;
-import cn.sanii.earth.process.Processor;
-import cn.sanii.earth.schedule.QueueScheduler;
-import cn.sanii.earth.schedule.Scheduler;
+import cn.sanii.earth.pipeline.IPipeline;
+import cn.sanii.earth.pipeline.impl.ConsolePipeline;
+import cn.sanii.earth.process.BaseBeforeProcessor;
+import cn.sanii.earth.process.IAfterProcessor;
+import cn.sanii.earth.process.IProcessor;
+import cn.sanii.earth.process.impl.ConsoleAfterProcessor;
+import cn.sanii.earth.schedule.IScheduler;
+import cn.sanii.earth.schedule.impl.QueueScheduler;
 import cn.sanii.earth.util.GuavaThreadPoolUtils;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Stopwatch;
@@ -19,10 +21,10 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
-import java.util.stream.Collectors;
 
 /**
  * @Author: shouliang.wang
@@ -32,7 +34,7 @@ import java.util.stream.Collectors;
 @Slf4j
 public class Wandering extends BaseComponent {
 
-    public Wandering(Processor processor) {
+    public Wandering(IProcessor processor) {
         this.processor = processor;
     }
 
@@ -42,6 +44,7 @@ public class Wandering extends BaseComponent {
         this.pipelines.addAll(component.pipelines);
         this.processor = component.processor;
         this.beforeProcessor = component.beforeProcessor;
+        this.afterProcessor = component.afterProcessor;
         this.startRequests.addAll(component.startRequests);
         this.cookies.putAll(component.cookies);
         this.scheduler = component.scheduler;
@@ -90,6 +93,7 @@ public class Wandering extends BaseComponent {
 
         if (waitTime > allowWaitTime) {
             stop();
+            Optional.ofNullable(this.afterProcessor).ifPresent(IAfterProcessor::process);
         }
     }
 
@@ -97,7 +101,6 @@ public class Wandering extends BaseComponent {
         if (this.isRun != false) {
             this.isRun = false;
         }
-        log.info("stop...");
     }
 
     private void trySleep() {
@@ -159,6 +162,9 @@ public class Wandering extends BaseComponent {
         if (Objects.nonNull(beforeProcessor)) {
             this.cookies.putAll(beforeProcessor.init());
         }
+        if (Objects.nonNull(afterProcessor)) {
+            afterProcessor = new ConsoleAfterProcessor();
+        }
         log.info("init success");
     }
 
@@ -193,37 +199,37 @@ public class Wandering extends BaseComponent {
     }
 
     @Override
-    public Wandering setBeforeProcessor(BeforeProcessor beforeProcessor) {
+    public Wandering setBeforeProcessor(BaseBeforeProcessor beforeProcessor) {
         super.setBeforeProcessor(beforeProcessor);
         return this;
     }
 
     @Override
-    public Wandering setProcessor(Processor processor) {
+    public Wandering setProcessor(IProcessor processor) {
         super.setProcessor(processor);
         return this;
     }
 
     @Override
-    public Wandering setDownloader(Downloader downloader) {
+    public Wandering setDownloader(IDownloader downloader) {
         super.setDownloader(downloader);
         return this;
     }
 
     @Override
-    public Wandering setScheduler(Scheduler scheduler) {
+    public Wandering setScheduler(IScheduler scheduler) {
         super.setScheduler(scheduler);
         return this;
     }
 
     @Override
-    public Wandering setPipelines(List<Pipeline> pipelines) {
+    public Wandering setPipelines(List<IPipeline> pipelines) {
         super.setPipelines(pipelines);
         return this;
     }
 
     @Override
-    public Wandering setPipelines(Pipeline pipeline) {
+    public Wandering setPipelines(IPipeline pipeline) {
         super.setPipelines(pipeline);
         return this;
     }

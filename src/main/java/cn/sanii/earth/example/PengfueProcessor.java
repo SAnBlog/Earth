@@ -1,6 +1,6 @@
 package cn.sanii.earth.example;
 
-import cn.sanii.earth.process.Processor;
+import cn.sanii.earth.process.IProcessor;
 import com.google.common.collect.Maps;
 import lombok.extern.slf4j.Slf4j;
 import cn.sanii.earth.model.Request;
@@ -19,7 +19,7 @@ import java.util.UUID;
  * @Description: https://www.pengfue.com/
  */
 @Slf4j
-public class PengfueProcessor implements Processor {
+public class PengfueProcessor implements IProcessor {
 
     @Override
     public void process(Response response) {

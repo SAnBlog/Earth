@@ -28,6 +28,7 @@ public class Request {
 
     /**
      * 实现了SchedulerName接口请使用该方法
+     *
      * @param url
      * @param name 任务id
      * @See cn.sanii.earth.schedule.SchedulerName
@@ -36,5 +37,6 @@ public class Request {
         this.url = url;
         this.name = name;
         this.headers.put("User-Agent", UserAgent.CHROME_FOR_MAC);
+        this.headers.put("Referer", url);
     }
 }

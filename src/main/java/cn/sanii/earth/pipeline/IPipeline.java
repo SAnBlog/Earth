@@ -7,7 +7,7 @@ import cn.sanii.earth.model.Response;
  * @Date: 2019/2/13 17:07
  * @Description: 处理管道接口
  */
-public interface Pipeline {
+public interface IPipeline {
 
     /**
      * 默认路径

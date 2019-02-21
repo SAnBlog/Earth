@@ -7,7 +7,7 @@ import cn.sanii.earth.model.Response;
  * @Date: 2019/2/13 17:08
  * @Description: 页面处理接口
  */
-public interface Processor {
+public interface IProcessor {
 
     /**
      * 对下载的页面进行处理

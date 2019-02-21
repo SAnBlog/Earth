@@ -2,7 +2,7 @@ package cn.sanii.earth.event.impl;
 
 import cn.sanii.earth.BaseComponent;
 import cn.sanii.earth.Wandering;
-import cn.sanii.earth.event.EventListener;
+import cn.sanii.earth.event.IEventListener;
 import cn.sanii.earth.util.GuavaThreadPoolUtils;
 import com.google.common.eventbus.Subscribe;
 import com.google.common.util.concurrent.ListeningExecutorService;
@@ -14,7 +14,7 @@ import lombok.extern.slf4j.Slf4j;
  * @Description: 异步监听任务
  */
 @Slf4j
-public class AsynWanderingListener implements EventListener<BaseComponent> {
+public class AsynWanderingListener implements IEventListener<BaseComponent> {
 
     /**
      * 线程池，控制消费线程数

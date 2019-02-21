@@ -1,13 +1,14 @@
 package cn.sanii.earth;
 
-import cn.sanii.earth.download.Downloader;
+import cn.sanii.earth.download.IDownloader;
 import cn.sanii.earth.event.EventManager;
 import cn.sanii.earth.model.Request;
 import cn.sanii.earth.model.enums.EventEnum;
-import cn.sanii.earth.pipeline.Pipeline;
-import cn.sanii.earth.process.BeforeProcessor;
-import cn.sanii.earth.process.Processor;
-import cn.sanii.earth.schedule.Scheduler;
+import cn.sanii.earth.pipeline.IPipeline;
+import cn.sanii.earth.process.IAfterProcessor;
+import cn.sanii.earth.process.BaseBeforeProcessor;
+import cn.sanii.earth.process.IProcessor;
+import cn.sanii.earth.schedule.IScheduler;
 import cn.sanii.earth.schedule.SchedulerName;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -28,22 +29,27 @@ public abstract class BaseComponent {
     /**
      * 下载器组件
      */
-    protected Downloader downloader;
+    protected IDownloader downloader;
 
     /**
      * 管道组件
      */
-    protected List<Pipeline> pipelines = Lists.newArrayList();
+    protected List<IPipeline> pipelines = Lists.newArrayList();
 
     /**
      * 处理页面组件
      */
-    protected Processor processor;
+    protected IProcessor processor;
 
     /**
      * 任务正式抓取前操作组件
      */
-    protected BeforeProcessor beforeProcessor;
+    protected BaseBeforeProcessor beforeProcessor;
+
+    /**
+     * 任务抓取完成后操作组件
+     */
+    protected IAfterProcessor afterProcessor;
 
     /**
      * 种子列表
@@ -58,7 +64,7 @@ public abstract class BaseComponent {
     /**
      * 调度器组件
      */
-    protected Scheduler scheduler;
+    protected IScheduler scheduler;
 
     /**
      * 线程池
@@ -115,22 +121,22 @@ public abstract class BaseComponent {
         return this;
     }
 
-    public BaseComponent setBeforeProcessor(BeforeProcessor beforeProcessor) {
+    public BaseComponent setBeforeProcessor(BaseBeforeProcessor beforeProcessor) {
         this.beforeProcessor = beforeProcessor;
         return this;
     }
 
-    public BaseComponent setProcessor(Processor processor) {
+    public BaseComponent setProcessor(IProcessor processor) {
         this.processor = processor;
         return this;
     }
 
-    public BaseComponent setDownloader(Downloader downloader) {
+    public BaseComponent setDownloader(IDownloader downloader) {
         this.downloader = downloader;
         return this;
     }
 
-    public BaseComponent setScheduler(Scheduler scheduler) {
+    public BaseComponent setScheduler(IScheduler scheduler) {
         if (scheduler instanceof SchedulerName) {
             ((SchedulerName) scheduler).setFieldName(this.processor.name());
         }
@@ -138,12 +144,12 @@ public abstract class BaseComponent {
         return this;
     }
 
-    public BaseComponent setPipelines(List<Pipeline> pipelines) {
+    public BaseComponent setPipelines(List<IPipeline> pipelines) {
         this.pipelines.addAll(pipelines);
         return this;
     }
 
-    public BaseComponent setPipelines(Pipeline pipeline) {
+    public BaseComponent setPipelines(IPipeline pipeline) {
         this.pipelines.add(pipeline);
         return this;
     }

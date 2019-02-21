@@ -2,7 +2,7 @@ package cn.sanii.earth.event;
 
 import cn.sanii.earth.BaseComponent;
 import cn.sanii.earth.event.impl.AsynWanderingListener;
-import cn.sanii.earth.process.Processor;
+import cn.sanii.earth.process.IProcessor;
 import com.google.common.collect.Lists;
 import lombok.Data;
 import lombok.experimental.Accessors;
@@ -21,29 +21,29 @@ public class EventConfig extends BaseComponent {
     /**
      * 事件监听器
      */
-    private static List<EventListener> listenerList = Lists.newArrayList();
+    private static List<IEventListener> listenerList = Lists.newArrayList();
 
     static {
         listenerList.add(new AsynWanderingListener());
     }
 
-    private EventConfig(Processor processor) {
+    private EventConfig(IProcessor processor) {
         this.processor = processor;
     }
 
-    public static EventConfig create(Processor processor) {
+    public static EventConfig create(IProcessor processor) {
         return new EventConfig(processor);
     }
 
-    public static void register(EventListener listener) {
+    public static void register(IEventListener listener) {
         listenerList.add(listener);
     }
 
-    public static void registerAll(List<EventListener> listenerList) {
+    public static void registerAll(List<IEventListener> listenerList) {
         listenerList.forEach(EventConfig::register);
     }
 
-    public static List<EventListener> getEventListener() {
+    public static List<IEventListener> getEventListener() {
         return listenerList;
     }
 

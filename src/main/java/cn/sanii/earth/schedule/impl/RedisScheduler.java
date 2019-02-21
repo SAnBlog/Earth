@@ -1,6 +1,8 @@
-package cn.sanii.earth.schedule;
+package cn.sanii.earth.schedule.impl;
 
 import cn.sanii.earth.model.Request;
+import cn.sanii.earth.schedule.IScheduler;
+import cn.sanii.earth.schedule.SchedulerName;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPoolConfig;
@@ -12,7 +14,7 @@ import java.util.Optional;
  * @Date: 2019/2/19 17:31
  * @Description: Redis调度队列
  */
-public class RedisScheduler extends SchedulerName implements Scheduler {
+public class RedisScheduler extends SchedulerName implements IScheduler {
 
     private JedisPool pool;
     private static final String PREFIX = "queue_";

@@ -1,5 +1,6 @@
-package cn.sanii.earth.download;
+package cn.sanii.earth.download.impl;
 
+import cn.sanii.earth.download.IDownloader;
 import cn.sanii.earth.model.Request;
 import cn.sanii.earth.model.Response;
 import cn.sanii.earth.util.OkHttpUtil;
@@ -16,7 +17,7 @@ import java.util.Objects;
  * @Description: okhttp下载器
  */
 @Slf4j
-public class HttpDownloader implements Downloader {
+public class HttpDownloader implements IDownloader {
 
     private static OkHttpClient ok;
 

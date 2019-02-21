@@ -1,6 +1,8 @@
-package cn.sanii.earth.pipeline;
+package cn.sanii.earth.pipeline.impl;
 
+import cn.sanii.earth.download.UserAgent;
 import cn.sanii.earth.model.Response;
+import cn.sanii.earth.pipeline.IPipeline;
 import cn.sanii.earth.util.GuavaThreadPoolUtils;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.io.Files;
@@ -23,7 +25,7 @@ import java.util.Objects;
  * @Description: 持久化到文件
  */
 @Slf4j
-public class SaveFilePipeline implements Pipeline {
+public class SaveFilePipeline implements IPipeline {
 
     private static ListeningExecutorService service;
 
@@ -53,6 +55,8 @@ public class SaveFilePipeline implements Pipeline {
                                         URL url = new URL(v);
                                         // 打开URL连接
                                         URLConnection con = url.openConnection();
+                                        con.setRequestProperty("UserAgent", UserAgent.CHROME_FOR_MAC);
+                                        con.setRequestProperty("Referer", v);
                                         // 得到URL的输入流
                                         InputStream input = con.getInputStream();
                                         byte[] data = readInputStream(input);

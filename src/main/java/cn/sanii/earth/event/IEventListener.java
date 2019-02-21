@@ -5,7 +5,7 @@ package cn.sanii.earth.event;
  * @Date: 2019-02-18 22:35
  * @Description: 事件驱动监听者
  */
-public interface EventListener<T> {
+public interface IEventListener<T> {
 
     /**
      * 消费事件

@@ -1,5 +1,6 @@
-package cn.sanii.earth.pipeline;
+package cn.sanii.earth.pipeline.impl;
 
+import cn.sanii.earth.pipeline.IPipeline;
 import com.alibaba.fastjson.JSONObject;
 import lombok.extern.slf4j.Slf4j;
 import cn.sanii.earth.model.Response;
@@ -13,7 +14,7 @@ import java.util.Map;
  * @Description: 默认 打印到控制台
  */
 @Slf4j
-public class ConsolePipeline implements Pipeline {
+public class ConsolePipeline implements IPipeline {
     @Override
     public void process(Response response) {
         Map<FieldEnum, Object> fields = response.getResultField().getFields();

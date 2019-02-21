@@ -15,17 +15,17 @@ import java.util.Objects;
 
 /**
  * @Author: shouliang.wang
- * @Date: 2019年2月15日 21:01:59
- * @Description: https://www.mzitu.com/zipai/
+ * @Date: 2019-02-21 21:09:25
+ * @Description: https://www.mzitu.com/xinggan/
  */
-public class MzituProcessor implements IProcessor {
+public class Mzitu2Processor implements IProcessor {
 
     @Override
     public void process(Response response) {
         Document document = response.getDocument();
 
         //获取下一个种子地址
-        document.getElementsByClass("pagenavi-cm").first().getElementsByTag("a").forEach(a -> {
+        document.getElementsByClass("nav-links").first().getElementsByTag("a").forEach(a -> {
             if (Objects.nonNull(a) && a.text().contains("下一页")) {
                 String nextPage = a.attr("href");
                 response.getResultField().getRequests().add(new Request(nextPage, name()));
@@ -36,8 +36,8 @@ public class MzituProcessor implements IProcessor {
          * 图片地址提取规则
          */
         HashMap<String, String> images = Maps.newHashMap();
-        document.getElementsByClass("lazy").forEach(element -> {
-            String img = element.attr("data-original");
+        document.getElementById("pins").getElementsByTag("li").forEach(element -> {
+            String img = element.getElementsByTag("img").first().attr("data-original");
             images.put(System.currentTimeMillis() + "", img);
         });
 
@@ -50,11 +50,10 @@ public class MzituProcessor implements IProcessor {
     }
 
     public static void main(String[] args) {
-        Earth.me(new MzituProcessor())
-                .addUrl("https://www.mzitu.com/zipai/")
+        Earth.me(new Mzitu2Processor())
+                .addUrl("https://www.mzitu.com/xinggan/")
                 .setPipelines(new SaveFilePipeline())
                 .addEvent(request -> Objects.nonNull(request), request -> System.out.println("请求体：" + JSONObject.toJSONString(request)))
-                .thread(10)
                 .start();
     }
 }
