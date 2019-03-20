@@ -1,14 +1,11 @@
+import cn.sanii.earth.util.Html2Image.CssboxUtil;
 import cn.sanii.earth.util.Html2Image.Html2ImageUtil;
 import cn.sanii.earth.util.Html2Image.PrintScreen4DJNativeSwingUtils;
 import cn.sanii.earth.util.OkHttpUtil;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
-import org.fit.cssbox.demo.ImageRenderer;
 import org.xml.sax.SAXException;
 
-import java.awt.*;
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 
 /**
@@ -22,8 +19,8 @@ public class Html2ImageTest {
     public static final String URL = "http://www.travelsky.com/tsky/validate.jsp";
 
     public static void main(String[] args) throws IOException, SAXException {
-        Html2Image();
-        JWebBrowser();
+//        Html2Image();
+//        JWebBrowser();
         cssbox();
     }
 
@@ -42,14 +39,9 @@ public class Html2ImageTest {
     }
 
     public static void cssbox() throws IOException, SAXException {
-        ImageRenderer render = new ImageRenderer();
-        System.out.println("start...");
         String url = "http://www.travelsky.com/tsky/validate.jsp";
-        FileOutputStream out = new FileOutputStream(new File("D:\\4_" + System.currentTimeMillis() + ".png"));
-        render.setWindowSize(new Dimension(1900, 1000), false);
-        render.renderURL(url, out, ImageRenderer.Type.PNG);
-        out.close();
-        System.out.println("OK");
+        CssboxUtil.toPath(url, "D:\\4_" + System.currentTimeMillis() + ".png");
+        System.out.println(CssboxUtil.toByte(url).length);
     }
 
 
