@@ -11,7 +11,12 @@ public enum FieldEnum {
      */
     TEXT,
     /**
-     * 字节类型 包括 图片 音频 视频等
+     * 字节类型URL 包括 图片 音频 视频等
      */
-    BYTE
+    BYTE,
+
+    /**
+     * 字节数组
+     */
+    BYTES
 }

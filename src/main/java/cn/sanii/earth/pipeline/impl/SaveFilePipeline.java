@@ -2,6 +2,7 @@ package cn.sanii.earth.pipeline.impl;
 
 import cn.sanii.earth.download.UserAgent;
 import cn.sanii.earth.model.Response;
+import cn.sanii.earth.pipeline.BaseMemoryPipeline;
 import cn.sanii.earth.pipeline.IPipeline;
 import cn.sanii.earth.util.GuavaThreadPoolUtils;
 import com.alibaba.fastjson.JSONObject;
@@ -25,16 +26,13 @@ import java.util.Objects;
  * @Description: 持久化到文件
  */
 @Slf4j
-public class SaveFilePipeline implements IPipeline {
+public class SaveFilePipeline extends BaseMemoryPipeline implements IPipeline {
 
     private static ListeningExecutorService service;
 
-    private String prifix;
-
     @Override
     public void process(Response response) {
-        prifix = new StringBuilder(FILE_PATH).append(response.getName()).append("/").toString();
-        mkDir(prifix);
+        mkDir(response.getName());
         response.getResultField().getFields().forEach((key, val) -> {
             try {
                 switch (key) {
@@ -68,6 +66,21 @@ public class SaveFilePipeline implements IPipeline {
                                 });
                             });
                         }
+                    case BYTES:
+                        Map<String, byte[]> urls = (Map<String, byte[]>) val;
+                        urls.forEach((k, v) -> {
+                            if (Objects.isNull(service)) {
+                                service = GuavaThreadPoolUtils.getDefualtGuavaExecutor();
+                            }
+                            service.submit(() -> {
+                                try {
+                                    StringBuilder path = new StringBuilder(prifix).append("/");
+                                    Files.write(v, new File(path.append(k).append(".png").toString()));
+                                } catch (IOException e) {
+                                    log.error("html2image error", e);
+                                }
+                            });
+                        });
                         break;
                     default:
                         log.error("不支持的持久化类型");
@@ -100,10 +113,4 @@ public class SaveFilePipeline implements IPipeline {
         return outStream.toByteArray();
     }
 
-    private void mkDir(String prifix) {
-        File file = new File(prifix);
-        if (!file.exists()) {
-            file.mkdirs();
-        }
-    }
 }

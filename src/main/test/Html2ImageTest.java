@@ -16,12 +16,12 @@ import java.io.IOException;
 public class Html2ImageTest {
     private static final OkHttpClient client = OkHttpUtil.getDefault();
 
-    public static final String URL = "http://www.travelsky.com/tsky/validate.jsp";
+    public static final String URL = "https://sanii.cn/";
 
-    public static void main(String[] args) throws IOException, SAXException {
+    public static void main(String[] args) throws IOException {
 //        Html2Image();
-//        JWebBrowser();
-        cssbox();
+        JWebBrowser();
+//        cssbox();
     }
 
     public static void Html2Image() throws IOException {
@@ -35,13 +35,11 @@ public class Html2ImageTest {
     }
 
     public static void JWebBrowser() throws IOException {
-        PrintScreen4DJNativeSwingUtils.printUrlScreen2jpg("D:\\3_" + System.currentTimeMillis() + ".png", "http://www.travelsky.com/tsky/validate.jsp", 0, 0);
+        PrintScreen4DJNativeSwingUtils.printUrlScreen2jpg("D:\\3_" + System.currentTimeMillis() + ".png", URL, 1900, 1000);
     }
 
     public static void cssbox() throws IOException, SAXException {
-        String url = "http://www.travelsky.com/tsky/validate.jsp";
-        CssboxUtil.toPath(url, "D:\\4_" + System.currentTimeMillis() + ".png");
-        System.out.println(CssboxUtil.toByte(url).length);
+        CssboxUtil.toPath(URL, "D:\\4_" + System.currentTimeMillis() + ".png");
     }
 
 

@@ -30,6 +30,7 @@ public class Response {
 
     private String html;
 
+    private byte[] bytes;
 
     public void setResult(String html) {
         this.html = html;
