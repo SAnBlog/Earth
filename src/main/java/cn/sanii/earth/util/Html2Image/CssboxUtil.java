@@ -16,8 +16,8 @@ import java.io.IOException;
  **/
 public class CssboxUtil {
 
-    public static final int WIDTH = 1900;
-    public static final int HEIGHT = 1000;
+    public static final int WIDTH = 1000;
+    public static final int HEIGHT = 550;
 
     /**
      * 图片生成到指定路径

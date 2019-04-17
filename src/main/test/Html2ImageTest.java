@@ -18,10 +18,10 @@ public class Html2ImageTest {
 
     public static final String URL = "https://sanii.cn/";
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws Exception {
 //        Html2Image();
-        JWebBrowser();
-//        cssbox();
+//        JWebBrowser();
+        cssbox();
     }
 
     public static void Html2Image() throws IOException {
@@ -39,7 +39,7 @@ public class Html2ImageTest {
     }
 
     public static void cssbox() throws IOException, SAXException {
-        CssboxUtil.toPath(URL, "D:\\4_" + System.currentTimeMillis() + ".png");
+        CssboxUtil.toPath("http://127.0.0.1:8080/img", "D:\\4_" + System.currentTimeMillis() + ".png");
     }
 
 
