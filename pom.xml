@@ -17,10 +17,10 @@
 
     <dependencies>
         <dependency>
-            <groupId>net.sf.cssbox</groupId>
-            <artifactId>cssbox</artifactId>
-            <version>4.12</version>
-        </dependency>
+        <groupId>net.sf.cssbox</groupId>
+        <artifactId>cssbox</artifactId>
+        <version>4.12</version>
+    </dependency>
 
         <dependency>
             <groupId>com.hynnet</groupId>
@@ -85,7 +85,7 @@
         <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
-            <version>21.0</version>
+            <version>23.0</version>
         </dependency>
 
 

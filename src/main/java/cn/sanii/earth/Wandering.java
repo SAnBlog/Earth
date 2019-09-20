@@ -99,7 +99,7 @@ public class Wandering extends BaseComponent {
     }
 
     public void stop() {
-        if (this.isRun != false) {
+        if (this.isRun) {
             this.isRun = false;
         }
     }

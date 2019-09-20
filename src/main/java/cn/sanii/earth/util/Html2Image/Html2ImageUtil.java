@@ -57,10 +57,9 @@ public class Html2ImageUtil {
         HtmlImageGenerator imageGenerator = new HtmlImageGenerator();
         try {
             imageGenerator.loadHtml(htmText);
-            imageGenerator.getBufferedImage();
-            Thread.sleep(1000);
+            Thread.sleep(2000);
             imageGenerator.saveAsImage(saveImageLocation);
-            imageGenerator.saveAsHtmlWithMap("hello-world.html", saveImageLocation);
+//            imageGenerator.saveAsHtmlWithMap("hello-world.html", saveImageLocation);
             //不需要转换位图的，下面三行可以不要
 //            BufferedImage sourceImg = ImageIO.read(new File(saveImageLocation));
 //            sourceImg = transform_Gray24BitMap(sourceImg);
