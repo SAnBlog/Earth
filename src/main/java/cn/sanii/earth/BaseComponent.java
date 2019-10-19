@@ -17,6 +17,7 @@ import java.nio.charset.Charset;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 
@@ -89,6 +90,7 @@ public abstract class BaseComponent {
      */
     protected long waitTime;
 
+    protected AtomicInteger statistics = new AtomicInteger(0);
     /**
      * 允许线程空闲最大等待时间，大于则终止任务。
      */

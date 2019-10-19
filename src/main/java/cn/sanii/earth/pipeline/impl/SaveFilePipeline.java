@@ -66,6 +66,7 @@ public class SaveFilePipeline extends BaseMemoryPipeline implements IPipeline {
                                 });
                             });
                         }
+                        break;
                     case BYTES:
                         Map<String, byte[]> urls = (Map<String, byte[]>) val;
                         urls.forEach((k, v) -> {

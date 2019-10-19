@@ -7,7 +7,6 @@ import cn.sanii.earth.example.PengfueProcessor;
 import cn.sanii.earth.pipeline.impl.SaveFilePipeline;
 import cn.sanii.earth.process.IProcessor;
 import cn.sanii.earth.schedule.impl.RedisScheduler;
-import com.alibaba.fastjson.JSONObject;
 import org.junit.jupiter.api.Test;
 
 import java.util.Objects;
@@ -51,7 +50,7 @@ public class Earth {
         BaseComponent component = EventConfig.create(new MzituProcessor())
                 .addUrl("https://www.mzitu.com/zipai/")
                 .setPipelines(new SaveFilePipeline())
-                .addEvent(request -> Objects.nonNull(request), request -> System.out.println("请求体：" + JSONObject.toJSONString(request)));
+                .addEvent(request -> Objects.nonNull(request), request -> System.out.println("请求体：" + request));
 
         Earth.asyn(component);
     }
@@ -62,7 +61,7 @@ public class Earth {
         Earth.me(new PengfueProcessor())
                 .addUrl("https://www.pengfue.com/")
                 .setPipelines(new SaveFilePipeline())
-                .addEvent(request -> Objects.nonNull(request), request -> System.out.println("请求体：" + JSONObject.toJSONString(request)))
+                .addEvent(request -> Objects.nonNull(request), request -> System.out.println("请求体：" + request))
                 .start();
     }
 
@@ -72,7 +71,7 @@ public class Earth {
         BaseComponent component = EventConfig.create(new MzituProcessor())
                 .addUrl("https://www.mzitu.com/zipai/")
                 .setPipelines(new SaveFilePipeline())
-                .addEvent(request -> Objects.nonNull(request), request -> System.out.println("请求体：" + JSONObject.toJSONString(request)))
+                .addEvent(request -> Objects.nonNull(request), request -> System.out.println("请求体：" + request))
                 .setScheduler(new RedisScheduler("127.0.0.1"));
 
         Earth.asyn(component);

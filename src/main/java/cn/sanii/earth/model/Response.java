@@ -1,5 +1,6 @@
 package cn.sanii.earth.model;
 
+import com.alibaba.fastjson.JSONObject;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -38,5 +39,9 @@ public class Response {
 
     public Document getDocument() {
         return Jsoup.parse(html);
+    }
+    @Override
+    public String toString() {
+        return JSONObject.toJSONString(this);
     }
 }

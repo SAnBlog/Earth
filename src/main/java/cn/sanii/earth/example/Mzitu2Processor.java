@@ -6,12 +6,12 @@ import cn.sanii.earth.model.Response;
 import cn.sanii.earth.model.enums.FieldEnum;
 import cn.sanii.earth.pipeline.impl.SaveFilePipeline;
 import cn.sanii.earth.process.IProcessor;
-import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Maps;
 import org.jsoup.nodes.Document;
 
 import java.util.HashMap;
 import java.util.Objects;
+import java.util.UUID;
 
 /**
  * @Author: shouliang.wang
@@ -36,10 +36,11 @@ public class Mzitu2Processor implements IProcessor {
          * 图片地址提取规则
          */
         HashMap<String, String> images = Maps.newHashMap();
-        document.getElementById("pins").getElementsByTag("li").forEach(element -> {
-            String img = element.getElementsByTag("img").first().attr("data-original");
-            images.put(System.currentTimeMillis() + "", img);
+        document.getElementsByTag("img").forEach(element -> {
+            String img = element.attr("src");
+            images.put(UUID.randomUUID().toString(), img);
         });
+
 
         response.getResultField().getFields().put(FieldEnum.BYTE, images);
     }
@@ -53,7 +54,7 @@ public class Mzitu2Processor implements IProcessor {
         Earth.me(new Mzitu2Processor())
                 .addUrl("https://www.mzitu.com/xinggan/")
                 .setPipelines(new SaveFilePipeline())
-                .addEvent(request -> Objects.nonNull(request), request -> System.out.println("请求体：" + JSONObject.toJSONString(request)))
+                .addEvent(request -> Objects.nonNull(request), request -> System.out.println("请求体：" +request))
                 .start();
     }
 }

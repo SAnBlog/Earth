@@ -9,7 +9,6 @@ import cn.sanii.earth.model.enums.FieldEnum;
 import cn.sanii.earth.pipeline.impl.SaveFilePipeline;
 import cn.sanii.earth.process.IProcessor;
 import cn.sanii.earth.util.Html2Image.CssboxUtil;
-import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Maps;
 import lombok.extern.slf4j.Slf4j;
 import org.jsoup.nodes.Document;
@@ -62,7 +61,7 @@ public class PengfueHtml2ImageProcessor implements IProcessor {
                 .addUrl("https://www.pengfue.com/")
                 .setPipelines(new SaveFilePipeline())
                 .setDownloader(new HttpDownloader())
-                .addEvent(request -> Objects.nonNull(request), request -> System.out.println("请求体：" + JSONObject.toJSONString(request)))
+                .addEvent(request -> Objects.nonNull(request), request -> System.out.println("请求体：" + request))
                 .start();
     }
 }

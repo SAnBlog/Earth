@@ -1,10 +1,9 @@
 package cn.sanii.earth.pipeline.impl;
 
-import cn.sanii.earth.pipeline.IPipeline;
-import com.alibaba.fastjson.JSONObject;
-import lombok.extern.slf4j.Slf4j;
 import cn.sanii.earth.model.Response;
 import cn.sanii.earth.model.enums.FieldEnum;
+import cn.sanii.earth.pipeline.IPipeline;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.Map;
 
@@ -18,6 +17,6 @@ public class ConsolePipeline implements IPipeline {
     @Override
     public void process(Response response) {
         Map<FieldEnum, Object> fields = response.getResultField().getFields();
-        fields.forEach((key, val) -> log.info("ConsolePipeline key:{},value:{}", key, JSONObject.toJSONString(val)));
+        fields.forEach((key, val) -> log.info("ConsolePipeline key:{},value:{}", key, val));
     }
 }

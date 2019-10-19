@@ -1,6 +1,7 @@
 package cn.sanii.earth.model;
 
 import cn.sanii.earth.download.UserAgent;
+import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Maps;
 import lombok.Data;
 import lombok.experimental.Accessors;
@@ -56,5 +57,10 @@ public class Request {
         this.charset = charset;
         this.headers.put("User-Agent", UserAgent.CHROME_FOR_MAC);
         this.headers.put("Referer", url);
+    }
+
+    @Override
+    public String toString() {
+        return JSONObject.toJSONString(this);
     }
 }

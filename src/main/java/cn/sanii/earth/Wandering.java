@@ -15,9 +15,9 @@ import cn.sanii.earth.process.impl.ConsoleAfterProcessor;
 import cn.sanii.earth.schedule.IScheduler;
 import cn.sanii.earth.schedule.impl.QueueScheduler;
 import cn.sanii.earth.util.GuavaThreadPoolUtils;
-import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Stopwatch;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections.CollectionUtils;
 
 import java.nio.charset.Charset;
 import java.util.List;
@@ -116,27 +116,39 @@ public class Wandering extends BaseComponent {
         request.setCookies(this.cookies).setName(this.processor.name());
         Response response = downloader.download(request);
         response.setName(this.processor.name());
-        log.info("response:{}", JSONObject.toJSONString(response));
-        if (response.isSuccess()) {
-            log.info("success");
-            success(response);
-        } else {
-            log.info("fail");
-            fail(request);
+        log.info("response:{}", response);
+        if (!(response.isSuccess() && successHandler(response))) {
+            log.info("fail!!!:{}",request.getUrl());
         }
     }
 
 
-    private void fail(Request request) {
+    private void failHandler(Request request) {
         scheduler.push(request);
     }
 
-    private void success(Response response) {
-        processor.process(response);
+    private boolean successHandler(Response response) {
+        try {
+            processor.process(response);
 
-        pipelines.forEach(pipeline -> pipeline.process(response));
+            pipelines.forEach(pipeline -> pipeline.process(response));
 
-        response.getResultField().getRequests().forEach(scheduler::push);
+            response.getResultField().getRequests().forEach(scheduler::push);
+
+            statisticsTask(response);
+        } catch (Exception e) {
+            log.error("successHandler fail",e);
+            return false;
+        }
+        return true;
+    }
+
+    private void statisticsTask(Response response) {
+        statistics.addAndGet(response.getResultField().getRequests().size());
+
+        if (CollectionUtils.isEmpty(response.getResultField().getRequests())) {
+            log.info("任务终止，完成任务数:{}", statistics.get());
+        }
     }
 
 

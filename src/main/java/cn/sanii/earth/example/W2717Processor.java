@@ -5,7 +5,6 @@ import cn.sanii.earth.model.Request;
 import cn.sanii.earth.model.Response;
 import cn.sanii.earth.pipeline.impl.SaveFilePipeline;
 import cn.sanii.earth.process.BaseImgProcessor;
-import com.alibaba.fastjson.JSONObject;
 import org.jsoup.nodes.Document;
 
 import java.nio.charset.Charset;
@@ -42,7 +41,7 @@ public class W2717Processor extends BaseImgProcessor {
         Earth.me(new W2717Processor())
                 .addUrl(Charset.forName("GB2312"),"https://www.2717.com/tag/434.html")
                 .setPipelines(new SaveFilePipeline())
-                .addEvent(request -> Objects.nonNull(request), request -> System.out.println("请求体：" + JSONObject.toJSONString(request)))
+                .addEvent(request -> Objects.nonNull(request), request -> System.out.println("请求体：" + request))
                 .start();
 
     }
