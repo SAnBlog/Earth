@@ -12,6 +12,8 @@ import cn.sanii.earth.schedule.IScheduler;
 import cn.sanii.earth.schedule.SchedulerName;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import com.google.common.hash.BloomFilter;
+import com.google.common.hash.Funnels;
 
 import java.nio.charset.Charset;
 import java.util.List;
@@ -96,6 +98,12 @@ public abstract class BaseComponent {
      */
     protected long allowWaitTime = 30000L;
 
+    /**
+     * 布隆过滤器
+     * 100w种子,1%误报率
+     */
+    private BloomFilter<CharSequence> charSequenceBloomFilter = BloomFilter.create(Funnels.stringFunnel(Charset.defaultCharset()), 1000_0000, 0.001);
+
     public BaseComponent addEvent(Predicate<Request> predicate, Consumer<Request> consumer) {
         this.predicate = predicate;
         EventManager.register(EventEnum.GLOBAL_STARTED, consumer);
@@ -119,13 +127,16 @@ public abstract class BaseComponent {
 
     public BaseComponent addUrl(Charset charset, String... url) {
         for (String s : url) {
-            this.startRequests.add(new Request(s, this.processor.name(), charset));
+            if (!isContain(s)) {
+                charSequenceBloomFilter.put(s);
+                this.startRequests.add(new Request(s, this.processor.name(), charset));
+            }
         }
         return this;
     }
 
     public BaseComponent addUrlAll(List<Request> startRequests) {
-        this.startRequests.addAll(startRequests);
+        startRequests.forEach(request -> addUrl(request.getCharset(), request.getUrl()));
         return this;
     }
 
@@ -160,5 +171,9 @@ public abstract class BaseComponent {
     public BaseComponent setPipelines(IPipeline pipeline) {
         this.pipelines.add(pipeline);
         return this;
+    }
+
+    public boolean isContain(String url) {
+        return charSequenceBloomFilter.mightContain(url);
     }
 }
