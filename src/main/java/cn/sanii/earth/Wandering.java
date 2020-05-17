@@ -16,6 +16,7 @@ import cn.sanii.earth.schedule.IScheduler;
 import cn.sanii.earth.schedule.impl.QueueScheduler;
 import cn.sanii.earth.util.GuavaThreadPoolUtils;
 import com.google.common.base.Stopwatch;
+import com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
 
@@ -58,6 +59,9 @@ public class Wandering extends BaseComponent {
     }
 
 
+    /**
+     * 异步
+     */
     public void start() {
         if (this.isRun) {
             log.error("Wandering is runing");
@@ -87,6 +91,30 @@ public class Wandering extends BaseComponent {
         }
     }
 
+
+    /**
+     * 同步
+     */
+    public List<Response> run() {
+
+        log.warn("北京第三区交通委提醒你:道路千万条,安全第一条,行车不规范,亲人两行泪");
+        initComponent();
+        Stopwatch started = Stopwatch.createStarted();
+        List<Response> responses = Lists.newArrayList();
+        while (true) {
+            Request request = scheduler.poll();
+            if (Objects.isNull(request)) {
+                break;
+            }
+            if (predicate.test(request)) {
+                EventManager.consumer(EventEnum.GLOBAL_STARTED, request);
+            }
+            log.info("runtime:{}", started.elapsed(TimeUnit.MILLISECONDS));
+            responses.add(handler(request));
+        }
+        return responses;
+    }
+
     private void checkTask(Stopwatch started, Request request) {
         if (Objects.isNull(request)) {
             waitTime += started.elapsed(TimeUnit.MILLISECONDS);
@@ -112,14 +140,15 @@ public class Wandering extends BaseComponent {
         }
     }
 
-    private void handler(Request request) {
+    private Response handler(Request request) {
         request.setCookies(this.cookies).setName(this.processor.name());
         Response response = downloader.download(request);
         response.setName(this.processor.name());
         log.info("response:{}", response);
         if (!(response.isSuccess() && successHandler(response))) {
-            log.info("fail!!!:{}",request.getUrl());
+            log.info("fail!!!:{}", request.getUrl());
         }
+        return response;
     }
 
 
@@ -137,7 +166,7 @@ public class Wandering extends BaseComponent {
 
             statisticsTask(response);
         } catch (Exception e) {
-            log.error("successHandler fail",e);
+            log.error("successHandler fail", e);
             return false;
         }
         return true;
