@@ -92,7 +92,7 @@ WebMagic的结构分为Downloader、PageProcessor、Scheduler、Pipeline四大�
 
 WebMagic总体架构图如下：
 
-![alt](https://images.gitee.com/uploads/images/2019/1126/145448_88fe07fb_1393640.png)
+![alt](https://github.com/SAnBlog/Earth/blob/master/san.png)
 
 Earth的四个组件
 
